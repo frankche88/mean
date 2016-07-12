@@ -37,9 +37,9 @@ console.log("password",password);
 
 if(!req.isvalidPassword){
   resp.redirect('/error');
-}else
-next();
-
+}else{
+  next();
+}
 });
 
 loginRouter.param('name',function(req,resp,next,name){
@@ -92,6 +92,25 @@ loginRouter.get('/authenticate/:name/:password',function(req,res){
 app.use('/admin', adminRouter);
 
 app.use('/login', loginRouter);
+
+app.route('/account')
+.get(function(req,res){
+  console.log('method GET');
+  res.send("method GET");
+})
+.post(function(req,res){
+  console.log('method POST');
+  res.send("method POST");
+})
+.put(function(req,res){
+  console.log('method PUT');
+  res.send("method PUT");
+})
+.delete(function(req,res){
+  console.log('method DELETE');
+  res.send("method DELETE");
+})
+;
 
 app.set('port',(process.env.PORT || 5000));
 
