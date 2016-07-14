@@ -1,3 +1,11 @@
+var mongoose = require('mongoose');
+
+//mongoose.connect('mongodb://localhost/pokemon');
+mongoose.connect('mongodb://admin:henry_09@ds015750.mlab.com:15750/pokemon_hgfv');
+
+
+console.log(mongoose);
+
 var express = require('express');
 var app = express();
 var path = require('path');
