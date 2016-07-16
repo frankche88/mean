@@ -1,126 +1,92 @@
-var mongoose = require('mongoose');
 
-//mongoose.connect('mongodb://localhost/pokemon');
-mongoose.connect('mongodb://admin:henry_09@ds015750.mlab.com:15750/pokemon_hgfv');
-
-
-console.log(mongoose);
-
+//Call all packages
 var express = require('express');
 var app = express();
 var path = require('path');
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
+var mongoose = require('mongoose');
+var User = require('./models/user');
 
-var adminRouter = express.Router();
-var loginRouter = express.Router();
+var port = process.env.PORT || 5000;
 
-app.get('/',function(req,res){
-  res.sendFile(path.join(__dirname)+ '/index.html');
-});
-app.get('/error',function(req,res){
-  res.sendFile(path.join(__dirname)+ '/error.html');
-});
+//APP CONFIGURATION
+app.use(bodyParser.urlencoded({extended:true}));
 
-//Middleware
-adminRouter.use(function (req,res,next){
+app.use(bodyParser.json());
 
-  console.log('--->',req.method,req.url);
+//CORS
 
-  next();
-});
-
-adminRouter.param('name',function(req,resp,next,name){
-console.log("req.name",req.name);
-console.log("name",name);
-
-req.name = "Mr robot was here";
-
+app.use(function(req,res,next){
+res.setHeader('Access-Control-Allow-Origin','*');
+res.setHeader('Access-Control-Allow-Methods','GET, POST');
+res.setHeader('Access-Control-Allow-Headers','X-Requested-Width, content-type,Authorization');
 next();
 });
 
-loginRouter.param('password',function(req,resp,next,password){
+app.use(morgan('dev'));
 
-req.isvalidPassword = password == "123";
+//DB conection
+mongoose.connect('mongodb://localhost/pokemon');
+//mongoose.connect('mongodb://admin:henry_09@ds015750.mlab.com:15750/pokemon_hgfv');
 
-console.log("password",password);
+//API ROUTERS
 
-if(!req.isvalidPassword){
-  resp.redirect('/error');
-}else{
-  next();
-}
+app.get('/',function(req,res){
+
+  res.send('Welcome to the rela world');
 });
 
-loginRouter.param('name',function(req,resp,next,name){
 
-req.name = name;
+//Express router instance
+var apiRouter = express.Router();
 
-req.isvalidName = name == "henry";
+apiRouter.get('/',function(req,res){
 
-if(!req.isvalidName){
-  resp.redirect('/error');
-}
-else {
-  next();
-}
-
+  res.json({message:'Welcome to Zion!(Our mother API)'});
 });
 
-//Rutas
-adminRouter.get('/',function(req,res){
-res.send("I am in the first page");
-});
+apiRouter.route('/users')
 
-adminRouter.get('/users',function(req,res){
-  console.log('llegue a la vista usuarios');
-  res.send("users");
-});
-
-adminRouter.get('/users/:name',function(req,res){
-res.send("hola "+req.name);
-});
-
-adminRouter.get('/posts',function(req,res){
-res.send("posts");
-});
-
-loginRouter.get('/',function(req,res){
-res.send("I am in login");
-});
-
-loginRouter.get('/users/:name',function(req,res){
-var mensaje = req.isvalid ? "welcome " + req.name: "usuario invalido";
-res.send(mensaje);
-});
-
-loginRouter.get('/authenticate/:name/:password',function(req,res){
-
-    res.send("auth welcome " + req.name);
-});
-
-app.use('/admin', adminRouter);
-
-app.use('/login', loginRouter);
-
-app.route('/account')
-.get(function(req,res){
-  console.log('method GET');
-  res.send("method GET");
-})
+//Create a user through POST
+//URL: http://localhost:5000/api/users
 .post(function(req,res){
-  console.log('method POST');
-  res.send("method POST");
-})
-.put(function(req,res){
-  console.log('method PUT');
-  res.send("method PUT");
-})
-.delete(function(req,res){
-  console.log('method DELETE');
-  res.send("method DELETE");
-})
-;
 
-app.set('port',(process.env.PORT || 5000));
+var user = new User();
+
+user.name = req.body.name;
+user.username = req.body.username;
+user.password = req.body.password;
+
+console.log(req.body.name);
+
+user.save(function(err){
+  // verify duplicate entry on username
+  if (err){
+  if(err.code == 11000){
+    console.log(err);
+    return res.json({success:false,message:'El usuario ya existe'});
+  }}
+  res.json({success:true,message:'usuario creado exitosamente'});
+});
+
+})
+.get(function(req,res){
+
+    User.find(function(err,users){
+      if(err) return res.send(err);
+
+      res.json(users);
+
+    });
+})
+
+
+//Register our ROUTERS
+
+app.use('/api',apiRouter);
+
+app.set('port',(port));
 
 app.listen(app.get('port'));
 
