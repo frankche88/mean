@@ -15,7 +15,26 @@ var pokemonSchema = new Schema({
             unique: true
         }
     },
-    type: String
+    type: String,
+    count: {
+        type: Number,
+        default: 0
+    }
+
+});
+
+pokemonSchema.methods.sayHi = function() {
+
+    var pokemon = this;
+
+    return 'hola!, soy ' + pokemon.name + ' de tipo ' + pokemon.type;
+
+};
+
+pokemonSchema.post('findOne', function(pokemon) {
+
+    pokemon.count++;
+    pokemon.save();
 
 });
 

@@ -51,7 +51,7 @@ apiRouter.route('/users')
 
 //Create a user through POST
 //URL: http://localhost:5000/api/users
-    .post(function(req, res) {
+.post(function(req, res) {
 
         var user = new User();
 
@@ -127,83 +127,93 @@ apiRouter.route('/users/:user_id')
         );
     });
 
-    apiRouter.route('/pokemons')
+apiRouter.route('/pokemons')
 
-    //Create a user through POST
-    //URL: http://localhost:5000/api/pokemons
-        .post(function(req, res) {
+//Create a user through POST
+//URL: http://localhost:5000/api/pokemons
+.post(function(req, res) {
 
-            var pokemon = new Pokemon();
+        var pokemon = new Pokemon();
 
-            pokemon.name = req.body.name;
-            pokemon.type = req.body.type;
+        pokemon.name = req.body.name;
+        pokemon.type = req.body.type;
 
-            console.log(req.body.name);
+        console.log(req.body.name);
+
+        pokemon.save(function(err) {
+            // verify duplicate entry on name
+            if (err) {
+                if (err.code == 11000) {
+                    console.log(err);
+                    return res.json({
+                        success: false,
+                        message: 'El pokemon ya existe'
+                    });
+                }
+            }
+            res.json({
+                success: true,
+                message: 'pokemon creado exitosamente'
+            });
+        });
+    })
+    .get(function(req, res) {
+
+        Pokemon.find(function(err, pokemons) {
+            if (err) return res.send(err);
+
+            res.json(pokemons);
+        });
+    });
+
+apiRouter.route('/pokemons/:pokemon_id')
+    .get(function(req, res) {
+
+        //  Pokemon.findById(req.params.pokemon_id, function(err, pokemon) {
+        //    if (err) return res.send(err);
+        //  res.json({message : pokemon.sayHi()});
+        //  })
+
+        Pokemon.findOne({
+            _id: req.params.pokemon_id
+        }, function(err, pokemon) {
+            if (err) return res.send(err);
+            res.json({
+                message: pokemon.sayHi(),
+                count: "ha sido consultado " + pokemon.count
+            });
+        });
+    })
+    .put(function(req, res) {
+        Pokemon.findById(req.params.pokemon_id, function(err, pokemon) {
+            if (err) return res.send(err);
+
+            if (req.body.name) pokemon.name = req.body.name;
+            if (req.body.type) pokemon.type = req.body.type;
 
             pokemon.save(function(err) {
-                // verify duplicate entry on name
-                if (err) {
-                    if (err.code == 11000) {
-                        console.log(err);
-                        return res.json({
-                            success: false,
-                            message: 'El pokemon ya existe'
-                        });
-                    }
-                }
+                if (err) return res.send(err);
                 res.json({
                     success: true,
-                    message: 'pokemon creado exitosamente'
+                    message: 'pokemon actualizado exitosamente'
                 });
             });
-        })
-        .get(function(req, res) {
-
-            Pokemon.find(function(err, pokemons) {
-                if (err) return res.send(err);
-
-                res.json(pokemons);
-            });
         });
+    })
+    .delete(function(req, res) {
 
-    apiRouter.route('/pokemons/:pokemon_id')
-        .get(function(req, res) {
-
-            Pokemon.findById(req.params.pokemon_id, function(err, pokemon) {
+        Pokemon.remove({
+                _id: req.params.pokemon_id
+            },
+            function(err, pokemon) {
                 if (err) return res.send(err);
-                res.json(pokemon);
-            })
-        })
-        .put(function(req, res) {
-            Pokemon.findById(req.params.pokemon_id, function(err, pokemon) {
-                if (err) return res.send(err);
-
-                if (req.body.name) pokemon.name = req.body.name;
-                if (req.body.type) pokemon.type = req.body.type;
-
-                pokemon.save(function(err) {
-                    if (err) return res.send(err);
-                    res.json({
-                        success: true,
-                        message: 'pokemon actualizado exitosamente'
-                    });
+                res.json({
+                    success: true,
+                    message: 'pokemon eliminado exitosamente'
                 });
-            });
-        })
-        .delete(function(req, res) {
-
-            Pokemon.remove({
-                    _id: req.params.pokemon_id
-                },
-                function(err, pokemon) {
-                    if (err) return res.send(err);
-                    res.json({
-                        success: true,
-                        message: 'pokemon eliminado exitosamente'
-                    });
-                }
-            );
-        });
+            }
+        );
+    });
 //Register our ROUTERS
 
 app.use('/api', apiRouter);
