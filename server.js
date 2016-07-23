@@ -4,9 +4,12 @@ var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
+var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 var User = require('./models/user');
 var Pokemon = require('./models/pokemon');
+
+var superSecret = "123";
 
 var port = process.env.PORT || 5000;
 
@@ -40,10 +43,92 @@ app.get('/', function(req, res) {
 //Express router instance
 var apiRouter = express.Router();
 
-apiRouter.get('/', function(req, res) {
+apiRouter.post("/authenticate", function(req, res) {
 
+    User.findOne({
+            username: req.body.username
+        }).select('name username password')
+        .exec(function(err, user) {
+            if (err) throw err;
+            if (!user) {
+                res.json({
+                    success: false,
+                    message: "la autenticacion ha fallado.El usuario no existe"
+                });
+            } else if (user) {
+                // Validate if passwords matches
+                var validaPassword = user.comparePassword(req.body.password);
+
+                if (!validaPassword) {
+                    res.json({
+                        success: false,
+                        message: 'la autenticacion ha fallado.Contrasena no existe'
+                    });
+                } else {
+                    //if  authenticate proccess is OK then
+                    // generate a token
+                    var token = jwt.sign({
+                        name: user.name,
+                        username: user.username
+                    }, superSecret, {
+                        expiresIn: '24h'
+                    });
+
+                    res.json({
+                        success: true,
+                        message: "Accesso autorizado",
+                        token: token
+                    })
+                }
+
+            }
+
+        });
+});
+
+//Middleware to verify a token
+
+apiRouter.use(function(req, res, next) {
+    console.log('alguien entrando a la matrix');
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+    if (token) {
+        //verify token
+        jwt.verify(token, superSecret, function(err, decoded) {
+
+            if (err) {
+                return res.json({
+                    success: false,
+                    message: "Fallo autenticacion del token"
+                })
+            } else {
+                console.log(decoded);
+                req.decoded = decoded;
+                next();
+            }
+
+        });
+
+    } else {
+        return res.status(403).send({
+            success: false,
+            message: 'No se envio el token'
+        });
+    }
+});
+
+//Accesed at get
+apiRouter.get('/', function(req, res) {
     res.json({
-        message: 'Welcome to Zion!(Our mother API)'
+        message: 'Welcome to the matrix'
+    });
+});
+
+apiRouter.get('/me', function(req, res) {
+
+  var decoded = req.decoded;
+    res.json({
+        message: 'Welcome '+decoded.username+' to the matrix'
     });
 });
 
@@ -165,20 +250,29 @@ apiRouter.route('/pokemons')
         //
         //     res.json(pokemons);
         // });
-        Pokemon.find({},function(err,pokemons){
-          User.populate(pokemons,{
-            path:'owner',
-            select:{name:1,username:1}
-            //,match:{name:'henry'}
-          },
-            function(err,pokemons){
+        Pokemon.find({}, function(err, pokemons) {
+                User.populate(pokemons, {
+                        path: 'owner',
+                        select: {
+                            name: 1,
+                            username: 1
+                        }
+                        //,match:{name:'henry'}
+                    },
+                    function(err, pokemons) {
 
-            res.status(200).send(pokemons);
-          })
-        })
-        //.skip(1).limit(3)
-        .sort({name:1})
-        .select({name:1,type:1,owner:1})
+                        res.status(200).send(pokemons);
+                    })
+            })
+            //.skip(1).limit(3)
+            .sort({
+                name: 1
+            })
+            .select({
+                name: 1,
+                type: 1,
+                owner: 1
+            })
 
         ;
     });
@@ -229,21 +323,23 @@ apiRouter.route('/pokemons/:pokemon_id')
     });
 
 apiRouter.route('/pokemons/type/:type')
-.get(function(req, res) {
-    Pokemon.find(
-      {
-        $or:[ {'type':new RegExp(req.params.type,'i')}, {'type':/fire/i} ],
-        // count:{
-        //   $gt:0,
-        //   $lt:8
-        // }
-      }
-      , function(err, pokemons) {
-        if (err) return res.send(err);
-        res.json(pokemons);
-    });
-})
-//Register our ROUTERS
+    .get(function(req, res) {
+        Pokemon.find({
+            $or: [{
+                'type': new RegExp(req.params.type, 'i')
+            }, {
+                'type': /fire/i
+            }],
+            // count:{
+            //   $gt:0,
+            //   $lt:8
+            // }
+        }, function(err, pokemons) {
+            if (err) return res.send(err);
+            res.json(pokemons);
+        });
+    })
+    //Register our ROUTERS
 
 app.use('/api', apiRouter);
 
