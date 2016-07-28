@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="../angular_sample/css/base.css">
     <script type="text/javascript" src="../node_modules/angular/angular.min.js">
     </script>
+    <script type="text/javascript" src="../angular_sample/js/directives.js">
+    </script>
     <script type="text/javascript" src="../angular_sample/js/controllers.js">
+    </script>
+    <script type="text/javascript" src="../angular_sample/js/services.js">
     </script>
     <script type="text/javascript" src="../angular_sample/app.js">
     </script>
@@ -36,11 +40,32 @@
         <div ng-bind="textFilters">
             {{ ['Pancho','Pistolas','Juan','come','ceviche'] | filter:'P' }}
         </div>
-    </div>
-    <div class="theClock" ng-controller="clockCtrl">
-        <h2> son las {{clock.now | date:'short'}}</h2>
-        <button type="button" ng-click="changeClock()"> cambiar fecha/hora</button>
-    </div>
+        <div>
+            {{ { dish:'rocoto', city:'Arequipa' }|json }}
+        </div>
+        <div bioatt>
+
+        </div>
+
+        <bioel>
+
+        </bioel>
+
+        <div class="theClock" ng-controller="clockCtrl">
+            <div clock>
+
+            </div>
+
+            <div ng-repeat="country in countries track by country.code">
+                {{country.code}}
+                <button type="button" ng-click="showCountry(country.code)">ver Nombre</button>
+            </div>
+            <br><hr>
+            {{countryname}}
+
+            <h2> son las {{clock.now | date:'short'}}</h2>
+            <button type="button" ng-click="changeClock()"> cambiar fecha/hora</button>
+        </div>
 </body>
 
 </html>
