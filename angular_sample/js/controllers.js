@@ -33,3 +33,39 @@ angular.module('myApp.controllers', [])
             $scope.$apply(updateClock);
         }, 1000);
     })
+.controller('countryCtrl', function($scope,countryService) {
+
+    $scope.current ="";
+    $scope.myLink="http://www.google.com";
+
+    $scope.fields = [
+        {placeholder:'abbr', isRequired:true},
+        {placeholder:'name', isRequired:true}
+
+    ];
+
+    $scope.countries = countryService.getCountries();
+
+    $scope.countryname = "";
+
+    $scope.showCountry = function(countryAbbr) {
+      $scope.countryname =  countryService.searchCountry(countryAbbr);
+    }
+
+    $scope.calculate = function(){
+
+      $scope.result = Number($scope.myNumber)*5;
+    }
+
+    $scope.calculateNumber = function(){
+
+      return Math.floor((Math.random()*10)+1);
+    }
+
+    $scope.setName = function(country){
+      $scope.countryValue = country;
+      $scope.current =country;
+    }
+
+
+})

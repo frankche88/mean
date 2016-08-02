@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+    <meta charset="utf-8">
+    <title>ANGULAR 101</title>
+    <link rel="stylesheet" href="../angular_sample/css/base.css">
+    <script type="text/javascript" src="../node_modules/angular/angular.min.js">
+    </script>
+    <script type="text/javascript" src="../angular_sample/js/directives.js">
+    </script>
+    <script type="text/javascript" src="../angular_sample/js/controllers.js">
+    </script>
+    <script type="text/javascript" src="../angular_sample/js/services.js">
+    </script>
+    <script type="text/javascript" src="../angular_sample/app.js">
+    </script>
+    <style media="screen">
+        .red {
+            background-color: red;
+            color: white;
+        }
+
+        .green {
+            background-color: green;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div ng-controller="countryCtrl">
+
+        <form name="new_country" ng-submit="submitForm()">
+
+            <div ng-repeat="field in fields" ng-form="new_country_form">
+                <input type="text"
+                name="dynamic_input"
+                ng-required="field.isRequired"
+                ng-model="field.name"
+                placeholder="{{field.placeholder}}">
+
+                <label ng-if="new_country_form.dynamic_input.$error.required && new_country_form.dynamic_input.$dirty">El campo es requerido</label>
+
+                <!-- 1.{{new_country_form.dynamic_input.$dirty}}
+                2.{{new_country_form.dynamic_input.$invalid}}
+                3.{{new_country_form.dynamic_input.$error}}
+                4.{{new_country_form.dynamic_input.$error.required}} -->
+
+            </div>
+
+
+
+            <button type="submit" ng-disabled = "new_country.$invalid" >Enviar</button>
+        </form>
+
+        <hr>
+
+        <a ng-href="{{myLink}}">click me</a>
+        <div ng-class="x>5 ? 'red':'green'">
+            hola
+        </div>
+        <button type="button" ng-click="x = calculateNumber()" ng-init="x=0">
+            calcular
+        </button>
+
+        <hr>
+        <label>Deseas informacion? {{info}}</label>
+        <input type="checkbox" ng-check="info" ng-init="info = true" ng-model="info">
+
+        <input type="text" ng-model="countryAbbr" />
+        <input type="text" ng-model="myNumber" ng-change="calculate()" ng-disabled="!info" />
+        <h2>{{result}}</h2>
+        <select ng-model="countryValue" ng-options="country.name for country in countries track by country.code">
+            <option>Seleccione una pais </option>
+        </select>
+
+        pais seleccionado:{{country.name}}
+        <div ng-repeat="country in countries track by country.code">
+            <a ng-click="setName(country.code)">{{country.code}}</a>
+            <label style="border-style: solid;border-color: #ff0000 #0000ff; " ng-if="current==country.code">{{country.name}}</label>
+        </div>
+        <br>
+        <hr> {{countryname}}
+    </div>
+</body>
+
+</html>
