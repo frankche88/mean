@@ -36,9 +36,9 @@ app.use(morgan('dev'));
 mongoose.connect('mongodb://admin:henry_09@ds015750.mlab.com:15750/pokemon_hgfv');
 
 //API ROUTERS
-app.get('/', function(req, res) {
-    res.send('Welcome to the rela world');
-});
+// app.get('/', function(req, res) {
+//     res.send('Welcome to the rela world');
+// });
 
 //Express router instance
 var apiRouter = express.Router();
@@ -342,6 +342,11 @@ apiRouter.route('/pokemons/type/:type')
     //Register our ROUTERS
 
 app.use('/api', apiRouter);
+
+app.use(express.static(__dirname+'/public'));
+app.get('*',function(req,res){
+  res.sendFile(path.join(__dirname+'/public/views/index.html'));
+});
 
 app.set('port', (port));
 
