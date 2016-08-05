@@ -1,16 +1,14 @@
-<div>
-    <h1>Login page</h1>
-    <p>
-        {{login.message}}
-    </p>
-</div>
 
-<div class="p+ pt0">
-    <lx-text-field lx-label="User Name" lx-allow-clear="true">
-        <input type="text" ng-model="vm.username">
-    </lx-text-field>
-    <lx-text-field lx-label="Password" lx-allow-clear="true">
-        <input type="password" ng-model="vm.password">
-    </lx-text-field>
-    <lx-button lx-type="raised">Sign in</lx-button>
+<div flex-container="column"  flex-align="space-between center">
+
+      <div class="p+ pt0">
+        <h1>Login</h1>
+          <lx-text-field lx-label="User Name" lx-allow-clear="true">
+              <input type="text" ng-model="vm.username">
+          </lx-text-field>
+          <lx-text-field lx-label="Password" lx-allow-clear="true">
+              <input type="password" ng-model="vm.password">
+          </lx-text-field>
+          <lx-button lx-type="raised">Sign in</lx-button>
+      </div>
 </div>
