@@ -1,6 +1,54 @@
-<div>
-    <h1>Pokemon page</h1>
-    <p>
-        {{pokemon.message}}
-    </p>
-</div>
+<div class="p+" flex-container="row" flex-gutter="24" flex-wrap>
+
+    <div flex-item="12">
+        <span class="fs-title display-block mb">Pokemons</span>
+        <div flex-item>
+            <div class="card">
+                <div class="toolbar">
+                    <lx-search-filter>
+                        <input type="text" ng-model="pokemon.searchPokemon" ng-change="pokemon.search();">
+                    </lx-search-filter>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div flex-item="12">
+
+        <ul class="list mt++">
+            <li class="list-row list-row--has-separator" ng-repeat="item in pokemon.pokemons">
+                <div class="list-row__primary">
+                    <img src="/bd_pokemon/pokemons/{{item.name}}.jpg" width="40" height="40" class="img-round">
+                </div>
+                <div class="list-row__content">
+                    <span>{{item.name}}</span>
+                    <span class="display-block fs-body-1 tc-black-2">{{item.species}}</span>
+                </div>
+                <div class="list-row__secondary">
+                    <lx-icon lx-id="information" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="pokemon.openDialog(item)"></lx-icon>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <lx-dialog id="{{ pokemon.dialogId }}">
+        <lx-dialog-header>
+            <div class="toolbar bgc-primary pl++">
+                <span class="toolbar__label tc-white fs-title">
+                  {{pokemon.infoPokemon.name}}
+                </span>
+
+            </div>
+
+        </lx-dialog-header>
+        <img src="/bd_pokemon/pokemons/{{pokemon.infoPokemon.name}}.jpg" class="img-round">
+        <strong class="fs-headline display-block">{{pokemon.infoPokemon.name}}</strong>
+        <span class="fs-subhead tc-black-2 display-block">{{pokemon.infoPokemon.species}}</span>
+        <lx-dialog-content>
+
+        </lx-dialog-content>
+
+        <lx-dialog-footer>
+            <lx-button lx-color="black" lx-type="flat" lx-dialog-close>Cancel</lx-button>
+            <lx-button lx-type="flat" lx-dialog-close>Ok</lx-button>
+        </lx-dialog-footer>
+    </lx-dialog>
