@@ -18,10 +18,10 @@
         <ul class="list mt++">
             <li class="list-row list-row--has-separator" ng-repeat="item in pokemon.pokemons">
                 <div class="list-row__primary">
-                    <img src="/bd_pokemon/pokemons/{{item.name}}.jpg" width="40" height="40" class="img-round">
+                    <img src="/bd_pokemon/pokemons/{{item.name|lowercase}}.jpg" width="40" height="40" class="img-round">
                 </div>
                 <div class="list-row__content">
-                    <span>{{item.name|lowercase}}</span>
+                    <span>{{item.name}}</span>
                     <span class="display-block fs-body-1 tc-black-2">{{item.species}}</span>
                 </div>
                 <div class="list-row__secondary">
