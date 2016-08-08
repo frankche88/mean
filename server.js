@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
+var nodemailer = require('nodemailer');
 var User = require('./models/user');
 var Pokemon = require('./models/pokemon');
 
@@ -43,6 +44,7 @@ mongoose.connect('mongodb://admin:henry_09@ds015750.mlab.com:15750/pokemon_hgfv'
 //Express router instance
 var apiRouter = express.Router();
 
+
 apiRouter.post("/authenticate", function(req, res) {
 
     User.findOne({
@@ -65,6 +67,7 @@ apiRouter.post("/authenticate", function(req, res) {
                         message: 'la autenticacion ha fallado.Contrasena no existe'
                     });
                 } else {
+
                     //if  authenticate proccess is OK then
                     // generate a token
                     var token = jwt.sign({
@@ -81,6 +84,65 @@ apiRouter.post("/authenticate", function(req, res) {
                     })
                 }
 
+            }
+
+        });
+});
+
+apiRouter.post("/Password", function(req, res) {
+
+    User.findOne({
+            email: req.body.email
+        }).select('email')
+        .exec(function(err, user) {
+            if (err) throw err;
+            if (!user) {
+                res.json({
+                    success: false,
+                    message: "El Email no existe"
+                });
+            } else if (user) {
+                //if  email proccess is OK then
+                // generate a token
+                var token = jwt.sign({
+                    email: user.email
+                }, superSecret, {
+                    expiresIn: '24h'
+                });
+
+                var nodemailer = require('nodemailer');
+
+                  // create reusable transporter object using the default SMTP transport
+                  var transporter = nodemailer.createTransport({
+                                                                service: 'Gmail',
+                                                                auth: {
+                                                                    user: 'XXX@gmail.com', // Your email id
+                                                                    pass: 'XXX' // Your password
+                                                                }
+                                                            });
+
+                  var htmlEmail =  '<a href="http://localhost:5000/api/Password?token='+ token+'">Click Reset</b>'
+                  // setup e-mail data with unicode symbols
+                  var mailOptions = {
+                      from: 'henrygustavof@gmail.com', // sender address
+                      to: user.email, // list of receivers
+                      subject: 'Password Reset', // Subject line
+                      //text: 'Password Reset Text', // plaintext body
+                      html: htmlEmail// html body
+                  };
+
+                  // send mail with defined transport object
+                  transporter.sendMail(mailOptions, function(error, info){
+                      if(error){
+                          return console.log(error);
+                      }
+                      console.log('Message sent: ' + info.response);
+                  });
+                res.json({
+                    success: true,
+                    message: "Enviar email",
+                    token: token
+                })
             }
 
         });
@@ -126,11 +188,42 @@ apiRouter.get('/', function(req, res) {
 
 apiRouter.get('/me', function(req, res) {
 
-  var decoded = req.decoded;
+    var decoded = req.decoded;
     res.json({
-        message: 'Welcome '+decoded.username+' to the matrix'
+        message: 'Welcome ' + decoded.username + ' to the matrix'
     });
 });
+
+//RestPassowrd
+apiRouter.get("/Password", function(req, res) {
+
+    var decoded = req.decoded;
+
+    User.findOne({
+            email: decoded.email
+        }).select('name username email')
+        .exec(function(err, user) {
+            if (err) throw err;
+            if (!user) {
+                res.json({
+                    success: false,
+                    message: "El Email no existe"
+                });
+            } else if (user) {
+
+                res.json({
+                    success: true,
+                    message: "Welcome  rest password",
+                    name: user.name,
+                    username: user.username,
+                    email: user.email
+                })
+            }
+
+        });
+});
+
+
 
 apiRouter.route('/users')
 
@@ -143,6 +236,7 @@ apiRouter.route('/users')
         user.name = req.body.name;
         user.username = req.body.username;
         user.password = req.body.password;
+        user.email = req.body.email;
 
         console.log(req.body.name);
 
@@ -187,6 +281,7 @@ apiRouter.route('/users/:user_id')
             if (req.body.name) user.name = req.body.name;
             if (req.body.username) user.username = req.body.username;
             if (req.body.password) user.password = req.body.password;
+            if (req.body.email) user.email = req.body.email;
 
             user.save(function(err) {
                 if (err) return res.send(err);
@@ -343,9 +438,9 @@ apiRouter.route('/pokemons/type/:type')
 
 app.use('/api', apiRouter);
 
-app.use(express.static(__dirname+'/public'));
-app.get('*',function(req,res){
-  res.sendFile(path.join(__dirname+'/public/views/index.html'));
+app.use(express.static(__dirname + '/public'));
+app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/public/views/index.html'));
 });
 
 app.set('port', (port));
