@@ -40,7 +40,7 @@
             </div>
 
         </lx-dialog-header>
-        <img src="/bd_pokemon/pokemons/{{pokemon.infoPokemon.name}}.jpg" class="img-round">
+        <img src="/bd_pokemon/pokemons/{{pokemon.infoPokemon.name |lowercase}}.jpg" class="img-round">
         <strong class="fs-headline display-block">{{pokemon.infoPokemon.name}}</strong>
         <span class="fs-subhead tc-black-2 display-block">{{pokemon.infoPokemon.species}}</span>
         <lx-dialog-content>
