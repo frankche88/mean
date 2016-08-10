@@ -1,4 +1,4 @@
-angular.module('pokeApp.services', [])
+angular.module('pokeApp.pokemonServices', [])
     .service('pokemonServices', function($http,$q,$filter) {
 
         var _pokemons = undefined;

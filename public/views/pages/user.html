@@ -1,55 +1,19 @@
 <div>
-    <h1>User page</h1>
-    <p>
-        {{user.message}}
-    </p>
-</div>
+  <h1>User Page</h1>
+  <div>
+      <ul class="list mt++">
+            <li class="list-row list-row--has-separator" ng-repeat="Usuario in user.users">
 
-<div class="p+" flex-container="row" flex-gutter="24" flex-wrap>
-    <div flex-item="6">
-        <span class="fs-title display-block mb">Users</span>
 
-        <div class="divider divider--dark"></div>
-
-        <ul class="list mt++">
-            <li class="list-row list-row--has-separator">
                 <div class="list-row__content">
-                    <span>Single-line item</span>
+                    <span>{{Usuario.name}}</span>
+                    <span class="display-block fs-body-1 tc-black-2">{{Usuario.username}}</span>
                 </div>
-            </li>
-            <li class="list-row list-row--has-separator">
-                <div class="list-row__content">
-                    <span>Single-line item</span>
-                </div>
-            </li>
-            <li class="list-row list-row--has-separator">
-                <div class="list-row__content">
-                    <span>Single-line item</span>
+
+                <div class="list-row__secondary">
+                    <lx-icon lx-id="information" lx-size="xs" lx-color="grey" lx-type="flat" ></lx-icon>
                 </div>
             </li>
         </ul>
-    </div>
-    <div flex-item="6">
-        <div class="card">
-            <div flex-container="row">
-                <div class="card__img card__img--left" style="height: 160px">
-                  
-                </div>
-
-                <div flex-item flex-container="column">
-                    <div flex-item>
-                        <div class="p+">
-                            <strong class="fs-headline display-block">Lorem Ipsum</strong>
-                            <span class="fs-subhead tc-black-2 display-block">Lorem Ipsum</span>
-                        </div>
-                    </div>
-
-                    <div class="card__actions">
-                        <lx-button lx-color="black" lx-type="flat">Actualizar</lx-button>
-                        <lx-button lx-color="orange" lx-type="flat">Eliminar</lx-button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
