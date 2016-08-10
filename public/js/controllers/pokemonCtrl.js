@@ -1,5 +1,5 @@
 angular.module('pokeApp.pokemonCtrl',[])
-.controller('pokemonCtrl', function(pokemonServices,LxDialogService, LxNotificationService) {
+.controller('pokemonCtrl', function(pokemonService,LxDialogService, LxNotificationService) {
         var vm = this;
 
         vm.dialogId = 'dialog-test';
@@ -8,7 +8,7 @@ angular.module('pokeApp.pokemonCtrl',[])
 
         var getPokemons = function() {
 
-            pokemonServices.getPokemons().then(
+            pokemonService.all().then(
                 function(response) {
                     vm.pokemons = response;
                 },
@@ -19,7 +19,7 @@ angular.module('pokeApp.pokemonCtrl',[])
 
         vm.search = function(){
 
-          pokemonServices.search(vm.searchPokemon).then(
+          pokemonService.search(vm.searchPokemon).then(
               function(response) {
                   vm.pokemons = response;
               },

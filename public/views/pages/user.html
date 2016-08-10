@@ -1,19 +1,92 @@
-<div>
-  <h1>User Page</h1>
-  <div>
-      <ul class="list mt++">
-            <li class="list-row list-row--has-separator" ng-repeat="Usuario in user.users">
+<div class="p+" flex-container="row" flex-gutter="24" flex-wrap>
 
+    <div flex-item="12">
+        <span class="fs-title display-block mb">Users</span>
+        <div flex-item>
+            <div class="card">
+                <div class="toolbar">
+                    <lx-search-filter>
+                        <input type="text" ng-model="user.searchUser" ng-change="user.search();">
+                    </lx-search-filter>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div flex-item="12" class="p+">
+        <lx-button lx-type="fab" ng-click="user.add();">
+            <i class="mdi mdi-plus"></i>
+        </lx-button>
+    </div>
+
+    <div flex-item="12">
+
+        <ul class="list mt++">
+            <li class="list-row list-row--has-separator" ng-repeat="item in user.users">
 
                 <div class="list-row__content">
-                    <span>{{Usuario.name}}</span>
-                    <span class="display-block fs-body-1 tc-black-2">{{Usuario.username}}</span>
+                    <span>{{item.name}}</span>
+                    <span class="display-block fs-body-1 tc-black-2">{{item.email}}</span>
                 </div>
-
                 <div class="list-row__secondary">
-                    <lx-icon lx-id="information" lx-size="xs" lx-color="grey" lx-type="flat" ></lx-icon>
+                    <lx-icon lx-id="information" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="user.openDialog(item._id)"></lx-icon>
+                    <lx-icon lx-id="pencil" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="user.edit(item)"></lx-icon>
+                    <lx-icon lx-id="delete" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="user.delete(item)"></lx-icon>
                 </div>
             </li>
         </ul>
-  </div>
-</div>
+    </div>
+    <lx-dialog id="{{ user.dialogId }}">
+        <lx-dialog-header>
+            <div class="toolbar bgc-primary pl++">
+                <span class="toolbar__label tc-white fs-title">
+                    {{user.infoUser.name}}
+                </span>
+
+            </div>
+
+        </lx-dialog-header>
+
+        <lx-dialog-content>
+            <strong class="fs-headline display-block">{{user.infoUser.name}}</strong>
+            <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.username}}</span>
+            <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.email}}</span>
+        </lx-dialog-content>
+
+        <lx-dialog-footer>
+            <lx-button lx-color="black" lx-type="flat" lx-dialog-close>Cancel</lx-button>
+            <lx-button lx-type="flat" lx-dialog-close>Ok</lx-button>
+        </lx-dialog-footer>
+    </lx-dialog>
+
+    <lx-dialog id="{{ user.dialogIdEdit }}">
+        <lx-dialog-header>
+            <div class="toolbar bgc-primary pl++">
+                <span class="toolbar__label tc-white fs-title"></span>
+
+            </div>
+
+        </lx-dialog-header>
+        <strong class="fs-headline display-block">{{user.infoUser.name}}</strong>
+        <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.username}}</span>
+        <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.email}}</span>
+        <lx-dialog-content>
+
+            <form name="new_user_form" ng-submit="submitForm()">
+
+                <lx-text-field lx-label="Name">
+                    <input type="text" name="name" ng-required="true" ng-model="model.name">
+                </lx-text-field>
+
+                <label ng-if="new_user_form.name.$error.required && new_user_form.name.$dirty">El campo es requerido</label>
+
+                <lx-button type="submit" ng-disabled="new_user_form.$invalid" lx-type="raised">Enviar</lx-button>
+            </form>
+
+        </lx-dialog-content>
+
+        <lx-dialog-footer>
+            <!-- <lx-button lx-color="black" lx-type="flat" lx-dialog-close>Cancel</lx-button>
+            <lx-button lx-type="flat" lx-dialog-close>Ok</lx-button> -->
+        </lx-dialog-footer>
+    </lx-dialog>
