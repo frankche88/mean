@@ -8,7 +8,7 @@ var Pokemon = require('../models/pokemon');
 
 var config = require('../../config');
 
-var supersecret = config.supersecret;
+var superSecret = config.supersecret;
 
 module.exports = function(app, express) {
     //Express router instance

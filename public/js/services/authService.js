@@ -8,6 +8,7 @@ angular.module('pokeApp.authServices', [])
                 password: password
             }).success(function(data) {
                 AuthToken.setToken(data.token);
+                $location.path('/users');
             })
         };
 

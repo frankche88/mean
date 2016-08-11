@@ -1,3 +1,14 @@
+<header>
+    <nav>
+        <a href="/users">
+            <lx-button lx-color="orange" lx-type="flat">Users</lx-button>
+        </a>
+        <a href="/pokemons">
+            <lx-button lx-color="orange" lx-type="flat">Pokemons</lx-button>
+        </a>
+    </nav>
+</header>
+
 <div class="p+" flex-container="row" flex-gutter="24" flex-wrap>
 
     <div flex-item="12">
@@ -65,8 +76,8 @@
         <lx-dialog-header>
             <div class="toolbar bgc-primary pl++">
                 <span class="toolbar__label tc-white fs-title">
-                  Agregar/Editar Usuario
-              </span>
+                    Agregar/Editar Usuario
+                </span>
 
             </div>
 
@@ -100,15 +111,14 @@
                     </lx-text-field>
 
                     <label ng-if="new_user_form.email.$error.required && new_user_form.email.$dirty" style="color:red">El campo es requerido</label>
-
+                    <br>
                     <lx-button type="submit" ng-disabled="new_user_form.$invalid" lx-type="raised" ng-click="user.save(user.model)">Enviar</lx-button>
-                    <div>
-            </form>
+                    <div></form>
 
-        </lx-dialog-content>
+                </lx-dialog-content>
 
-        <lx-dialog-footer>
-            <!-- <lx-button lx-color="black" lx-type="flat" lx-dialog-close>Cancel</lx-button>
+                <lx-dialog-footer>
+                    <!-- <lx-button lx-color="black" lx-type="flat" lx-dialog-close>Cancel</lx-button>
             <lx-button lx-type="flat" lx-dialog-close>Ok</lx-button> -->
-        </lx-dialog-footer>
-    </lx-dialog>
+                </lx-dialog-footer>
+            </lx-dialog>
