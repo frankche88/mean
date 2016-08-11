@@ -12,7 +12,11 @@
             </div>
         </div>
     </div>
-
+    <div flex-item="12" class="p+">
+        <lx-button lx-type="fab" ng-click="pokemon.add();">
+            <i class="mdi mdi-plus"></i>
+        </lx-button>
+    </div>
     <div flex-item="12">
 
         <ul class="list mt++">
@@ -22,10 +26,12 @@
                 </div>
                 <div class="list-row__content">
                     <span>{{item.name}}</span>
-                    <span class="display-block fs-body-1 tc-black-2">{{item.species}}</span>
+                    <span class="display-block fs-body-1 tc-black-2">{{item.type}}</span>
                 </div>
                 <div class="list-row__secondary">
                     <lx-icon lx-id="information" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="pokemon.openDialog(item)"></lx-icon>
+                    <lx-icon lx-id="pencil" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="pokemon.edit(item._id)"></lx-icon>
+                    <lx-icon lx-id="delete" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="pokemon.delete(item._id)"></lx-icon>
                 </div>
             </li>
         </ul>
@@ -34,7 +40,7 @@
         <lx-dialog-header>
             <div class="toolbar bgc-primary pl++">
                 <span class="toolbar__label tc-white fs-title">
-                    {{pokemon.infoPokemon.name}}
+                   Info Pokemon
                 </span>
 
             </div>
@@ -42,13 +48,68 @@
         </lx-dialog-header>
 
         <lx-dialog-content>
-            <img src="/bd_pokemon/pokemons/{{pokemon.infoPokemon.name |lowercase}}.jpg" class="img-round">
-            <strong class="fs-headline display-block">{{pokemon.infoPokemon.name}}</strong>
-            <span class="fs-subhead tc-black-2 display-block">{{pokemon.infoPokemon.species}}</span>
+            <div class="p+">
+                <img src="/bd_pokemon/pokemons/{{pokemon.infoPokemon.name |lowercase}}.jpg" class="img-round">
+                <strong class="fs-headline display-block">{{pokemon.infoPokemon.name}}</strong>
+                <span class="fs-subhead tc-black-2 display-block">{{pokemon.infoPokemon.type}}</span>
+                <span class="fs-subhead tc-black-2 display-block">{{pokemon.infoPokemon.height}}</span>
+                <span class="fs-subhead tc-black-2 display-block">{{pokemon.infoPokemon.weight}}</span>
+            </div>
         </lx-dialog-content>
 
         <lx-dialog-footer>
             <lx-button lx-color="black" lx-type="flat" lx-dialog-close>Cancel</lx-button>
             <lx-button lx-type="flat" lx-dialog-close>Ok</lx-button>
+        </lx-dialog-footer>
+    </lx-dialog>
+    <lx-dialog id="{{ pokemon.dialogIdEdit }}">
+        <lx-dialog-header>
+            <div class="toolbar bgc-primary pl++">
+                <span class="toolbar__label tc-white fs-title">
+                  Agregar/Editar Pokemon
+              </span>
+
+            </div>
+
+        </lx-dialog-header>
+        <lx-dialog-content>
+
+            <form name="new_pokemon_form" ng-submit="submitForm()">
+                <div class="p+">
+                    <input type="hidden" name="_id" ng-model="pokemon.model._id">
+
+                    <lx-text-field lx-label="Name">
+                        <input type="text" name="name" ng-required="true" ng-model="pokemon.model.name">
+                    </lx-text-field>
+
+                    <label ng-if="new_pokemon_form.name.$error.required && new_pokemon_form.name.$dirty" style="color:red">El campo es requerido</label>
+
+                    <lx-text-field lx-label="Height">
+                        <input type="text" name="height" ng-required="true" ng-model="pokemon.model.height">
+                    </lx-text-field>
+
+                    <label ng-if="new_pokemon_form.weight.$error.required && new_pokemon_form.weight.$dirty" style="color:red">El campo es requerido</label>
+
+                    <lx-text-field lx-label="Weight">
+                        <input type="text" name="weight" ng-required="true" ng-model="pokemon.model.weight">
+                    </lx-text-field>
+
+                    <label ng-if="new_pokemon_form.weight.$error.required && new_pokemon_form.weight.$dirty" style="color:red">El campo es requerido</label>
+
+                    <lx-text-field lx-label="Type">
+                        <input type="text" name="type" ng-required="true" ng-model="pokemon.model.type">
+                    </lx-text-field>
+
+                    <label ng-if="new_pokemon_form.type.$error.required && new_pokemon_form.type.$dirty" style="color:red">El campo es requerido</label>
+
+                    <lx-button type="submit" ng-disabled="new_pokemon_form.$invalid" lx-type="raised" ng-click="pokemon.save(pokemon.model)">Enviar</lx-button>
+                    <div>
+            </form>
+
+        </lx-dialog-content>
+
+        <lx-dialog-footer>
+            <!-- <lx-button lx-color="black" lx-type="flat" lx-dialog-close>Cancel</lx-button>
+            <lx-button lx-type="flat" lx-dialog-close>Ok</lx-button> -->
         </lx-dialog-footer>
     </lx-dialog>

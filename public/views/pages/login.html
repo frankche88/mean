@@ -4,11 +4,11 @@
       <div class="p+ pt0">
         <h1>Login</h1>
           <lx-text-field lx-label="User Name" lx-allow-clear="true">
-              <input type="text" ng-model="vm.username">
+              <input type="text" ng-model="login.username">
           </lx-text-field>
           <lx-text-field lx-label="Password" lx-allow-clear="true">
-              <input type="password" ng-model="vm.password">
+              <input type="password" ng-model="login.password">
           </lx-text-field>
-          <lx-button lx-type="raised">Sign in</lx-button>
+          <lx-button lx-type="raised" ng-click="login.login(login.username,login.password)">Sign in</lx-button>
       </div>
 </div>

@@ -30,8 +30,8 @@
                 </div>
                 <div class="list-row__secondary">
                     <lx-icon lx-id="information" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="user.openDialog(item._id)"></lx-icon>
-                    <lx-icon lx-id="pencil" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="user.edit(item)"></lx-icon>
-                    <lx-icon lx-id="delete" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="user.delete(item)"></lx-icon>
+                    <lx-icon lx-id="pencil" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="user.edit(item._id)"></lx-icon>
+                    <lx-icon lx-id="delete" lx-size="xs" lx-color="grey" lx-type="flat" ng-click="user.delete(item._id)"></lx-icon>
                 </div>
             </li>
         </ul>
@@ -40,7 +40,7 @@
         <lx-dialog-header>
             <div class="toolbar bgc-primary pl++">
                 <span class="toolbar__label tc-white fs-title">
-                    {{user.infoUser.name}}
+                    Info Usuario
                 </span>
 
             </div>
@@ -48,9 +48,11 @@
         </lx-dialog-header>
 
         <lx-dialog-content>
-            <strong class="fs-headline display-block">{{user.infoUser.name}}</strong>
-            <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.username}}</span>
-            <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.email}}</span>
+            <div class="p+">
+                <strong class="fs-headline display-block">{{user.infoUser.name}}</strong>
+                <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.username}}</span>
+                <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.email}}</span>
+            </div>
         </lx-dialog-content>
 
         <lx-dialog-footer>
@@ -62,25 +64,45 @@
     <lx-dialog id="{{ user.dialogIdEdit }}">
         <lx-dialog-header>
             <div class="toolbar bgc-primary pl++">
-                <span class="toolbar__label tc-white fs-title"></span>
+                <span class="toolbar__label tc-white fs-title">
+                  Agregar/Editar Usuario
+              </span>
 
             </div>
 
         </lx-dialog-header>
-        <strong class="fs-headline display-block">{{user.infoUser.name}}</strong>
-        <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.username}}</span>
-        <span class="fs-subhead tc-black-2 display-block">{{user.infoUser.email}}</span>
         <lx-dialog-content>
 
             <form name="new_user_form" ng-submit="submitForm()">
+                <div class="p+">
+                    <input type="hidden" name="_id" ng-model="user.model._id">
 
-                <lx-text-field lx-label="Name">
-                    <input type="text" name="name" ng-required="true" ng-model="model.name">
-                </lx-text-field>
+                    <lx-text-field lx-label="Name">
+                        <input type="text" name="name" ng-required="true" ng-model="user.model.name">
+                    </lx-text-field>
 
-                <label ng-if="new_user_form.name.$error.required && new_user_form.name.$dirty">El campo es requerido</label>
+                    <label ng-if="new_user_form.name.$error.required && new_user_form.name.$dirty" style="color:red">El campo es requerido</label>
 
-                <lx-button type="submit" ng-disabled="new_user_form.$invalid" lx-type="raised">Enviar</lx-button>
+                    <lx-text-field lx-label="UserName">
+                        <input type="text" name="username" ng-required="true" ng-model="user.model.username">
+                    </lx-text-field>
+
+                    <label ng-if="new_user_form.username.$error.required && new_user_form.username.$dirty" style="color:red">El campo es requerido</label>
+
+                    <lx-text-field lx-label="Password">
+                        <input type="password" name="password" ng-required="true" ng-model="user.model.password">
+                    </lx-text-field>
+
+                    <label ng-if="new_user_form.password.$error.required && new_user_form.password.$dirty" style="color:red">El campo es requerido</label>
+
+                    <lx-text-field lx-label="Email">
+                        <input type="text" name="email" ng-required="true" ng-model="user.model.email">
+                    </lx-text-field>
+
+                    <label ng-if="new_user_form.email.$error.required && new_user_form.email.$dirty" style="color:red">El campo es requerido</label>
+
+                    <lx-button type="submit" ng-disabled="new_user_form.$invalid" lx-type="raised" ng-click="user.save(user.model)">Enviar</lx-button>
+                    <div>
             </form>
 
         </lx-dialog-content>

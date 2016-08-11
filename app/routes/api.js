@@ -119,34 +119,34 @@ module.exports = function(app, express) {
 
     //Middleware to verify a token
 
-    // apiRouter.use(function(req, res, next) {
-    //     console.log('alguien entrando a la matrix');
-    //     var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    //
-    //     if (token) {
-    //         //verify token
-    //         jwt.verify(token, superSecret, function(err, decoded) {
-    //
-    //             if (err) {
-    //                 return res.json({
-    //                     success: false,
-    //                     message: "Fallo autenticacion del token"
-    //                 })
-    //             } else {
-    //                 console.log(decoded);
-    //                 req.decoded = decoded;
-    //                 next();
-    //             }
-    //
-    //         });
-    //
-    //     } else {
-    //         return res.status(403).send({
-    //             success: false,
-    //             message: 'No se envio el token'
-    //         });
-    //     }
-    // });
+    apiRouter.use(function(req, res, next) {
+        console.log('alguien entrando a la matrix');
+        var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+        if (token) {
+            //verify token
+            jwt.verify(token, superSecret, function(err, decoded) {
+
+                if (err) {
+                    return res.json({
+                        success: false,
+                        message: "Fallo autenticacion del token"
+                    })
+                } else {
+                    console.log(decoded);
+                    req.decoded = decoded;
+                    next();
+                }
+
+            });
+
+        } else {
+            return res.status(403).send({
+                success: false,
+                message: 'No se envio el token'
+            });
+        }
+    });
 
     //Accesed at get
     apiRouter.get('/', function(req, res) {
@@ -284,6 +284,8 @@ module.exports = function(app, express) {
 
             pokemon.name = req.body.name;
             pokemon.type = req.body.type;
+            pokemon.height = req.body.height;
+            pokemon.weight = req.body.weight;
             pokemon.owner = req.body.owner;
 
             console.log(req.body.name);
@@ -321,7 +323,7 @@ module.exports = function(app, express) {
                         })
                 })
                 .sort({name: 1 })
-                .select({name: 1,type: 1,owner: 1});
+                .select({name: 1,height:1,weight:1,type: 1,owner: 1});
         });
 
     apiRouter.route('/pokemons/:pokemon_id')
@@ -331,10 +333,11 @@ module.exports = function(app, express) {
                 _id: req.params.pokemon_id
             }, function(err, pokemon) {
                 if (err) return res.send(err);
-                res.json({
-                    message: pokemon.sayHi(),
-                    count: "ha sido consultado " + pokemon.count
-                });
+                res.json(pokemon);
+                // res.json({
+                //     message: pokemon.sayHi(),
+                //     count: "ha sido consultado " + pokemon.count
+                // });
             });
         })
         .put(function(req, res) {
@@ -344,6 +347,8 @@ module.exports = function(app, express) {
                 if (req.body.name) pokemon.name = req.body.name;
                 if (req.body.type) pokemon.type = req.body.type;
                 if (req.body.owner) pokemon.owner = req.body.owner;
+                if (req.body.height) pokemon.height = req.body.height;
+                if (req.body.weight) pokemon.weight = req.body.weight;
 
                 pokemon.save(function(err) {
                     if (err) return res.send(err);

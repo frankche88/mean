@@ -30,3 +30,8 @@ angular.module('pokeApp.routes', ['ngRoute'])
             requireBase: false
         });
     })
+    .constant('GlobalInfo',
+        {
+            apiUrl: 'http://localhost:5000/api'
+            //apiUrl:http://curso-mean-henry.herokuapp.com/
+        });

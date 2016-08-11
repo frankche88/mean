@@ -1,15 +1,14 @@
 angular.module('pokeApp.pokemonServices', [])
-    .service('pokemonService', function($http, $q, $filter) {
+    .service('pokemonService', function($http, $q, $filter,GlobalInfo) {
 
         var _pokemons = undefined;
 
         this.all = function() {
 
-          if (!_pokemons) {
-
               var deferred = $q.defer();
 
-              $http.get("bd_pokemon/pokemons.json")
+              //$http.get("bd_pokemon/pokemons.json")
+                $http.get(GlobalInfo.apiUrl+"/pokemons")
                   .success(function(response) {
                       deferred.resolve(response);
                   })
@@ -18,7 +17,6 @@ angular.module('pokeApp.pokemonServices', [])
                   });
 
               _pokemons = deferred.promise;
-          }
 
             return _pokemons;
         };
@@ -32,5 +30,63 @@ angular.module('pokeApp.pokemonServices', [])
             }, false);
             deferred.resolve(found);
             return deferred.promise;
+        };
+
+        this.get = function(id) {
+
+            var deferred = $q.defer();
+
+            $http.get(GlobalInfo.apiUrl+"/pokemons/" + id)
+                .success(function(response) {
+                    deferred.resolve(response);
+                })
+                .error(function(response) {
+                    deferred.reject(response);
+                });
+
+            return deferred.promise;
+
+        };
+
+        this.create = function(model) {
+            var deferred = $q.defer();
+
+            $http.post(GlobalInfo.apiUrl+"/pokemons/", model)
+                .success(function(response) {
+                    deferred.resolve(response);
+                })
+                .error(function(response) {
+                    deferred.reject(response);
+                });
+
+            return deferred.promise;
+        };
+
+        this.update = function(model) {
+          var deferred = $q.defer();
+
+          $http.put(GlobalInfo.apiUrl+"/pokemons/"+model._id, model)
+              .success(function(response) {
+                  deferred.resolve(response);
+              })
+              .error(function(response) {
+                  deferred.reject(response);
+              });
+
+          return deferred.promise;
+        };
+
+        this.delete = function(id) {
+          var deferred = $q.defer();
+
+          $http.delete(GlobalInfo.apiUrl+"/pokemons/" + id)
+              .success(function(response) {
+                  deferred.resolve(response);
+              })
+              .error(function(response) {
+                  deferred.reject(response);
+              });
+
+          return deferred.promise;
         };
     });

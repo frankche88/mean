@@ -15,6 +15,8 @@ var pokemonSchema = new Schema({
             unique: true
         }
     },
+    height: String,
+    weight: String,
     type: String,
     count: {
         type: Number,

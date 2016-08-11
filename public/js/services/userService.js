@@ -1,61 +1,90 @@
 angular.module('pokeApp.userServices', [])
-    .service('userService', function($http, $q,$filter) {
+    .service('userService', function($http, $q, $filter,GlobalInfo) {
+
         var _users = undefined;
-        var _user = undefined;
+
         this.all = function() {
-            if (!_users) {
-                var deferred = $q.defer();
 
-                $http.get("http://localhost:5000/api/users")
-                    .success(function(response) {
-                        deferred.resolve(response);
-                    })
-                    .error(function(response) {
-                        deferred.reject(response);
-                    });
+            var deferred = $q.defer();
 
-                _users = deferred.promise;
-            }
+            $http.get(GlobalInfo.apiUrl+"/users")
+                .success(function(response) {
+                    deferred.resolve(response);
+                })
+                .error(function(response) {
+                    deferred.reject(response);
+                });
+
+            _users = deferred.promise;
             return _users;
         };
 
         this.search = function(nameUser) {
-          var deferred = $q.defer();
+            var deferred = $q.defer();
 
-          var found = $filter('filter')(_users.$$state.value, {
-              name: nameUser
-          }, false);
-          deferred.resolve(found);
-          return deferred.promise;
+            var found = $filter('filter')(_users.$$state.value, {
+                name: nameUser
+            }, false);
+            deferred.resolve(found);
+            return deferred.promise;
         };
 
         this.get = function(id) {
-            if (!_user) {
-                var deferred = $q.defer();
 
-                $http.get("http://localhost:5000/api/users/" + id)
-                    .success(function(response) {
-                        deferred.resolve(response);
-                    })
-                    .error(function(response) {
-                        deferred.reject(response);
-                    });
+            var deferred = $q.defer();
 
-                _user = deferred.promise;
-            }
-            return _user;
+            $http.get(GlobalInfo.apiUrl+"/users/" + id)
+                .success(function(response) {
+                    deferred.resolve(response);
+                })
+                .error(function(response) {
+                    deferred.reject(response);
+                });
+
+            return deferred.promise;
+
         };
 
-        this.create = function() {
-            return _user;
+        this.create = function(model) {
+            var deferred = $q.defer();
+
+            $http.post(GlobalInfo.apiUrl+"/users/", model)
+                .success(function(response) {
+                    deferred.resolve(response);
+                })
+                .error(function(response) {
+                    deferred.reject(response);
+                });
+
+            return deferred.promise;
         };
 
-        this.update = function() {
-            return _user;
+        this.update = function(model) {
+          var deferred = $q.defer();
+
+          $http.put(GlobalInfo.apiUrl+"/users/"+model._id, model)
+              .success(function(response) {
+                  deferred.resolve(response);
+              })
+              .error(function(response) {
+                  deferred.reject(response);
+              });
+
+          return deferred.promise;
         };
 
-        this.delete = function() {
-            return _user;
+        this.delete = function(id) {
+          var deferred = $q.defer();
+
+          $http.delete(GlobalInfo.apiUrl+"/users/" + id)
+              .success(function(response) {
+                  deferred.resolve(response);
+              })
+              .error(function(response) {
+                  deferred.reject(response);
+              });
+
+          return deferred.promise;
         };
 
     })
