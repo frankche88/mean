@@ -1,5 +1,6 @@
 angular.module('pokeApp', [
     'pokeApp.routes',
+    'pokeApp.mainCtrl',
     'pokeApp.loginCtrl',
     'pokeApp.pokemonCtrl',
     'pokeApp.userCtrl',

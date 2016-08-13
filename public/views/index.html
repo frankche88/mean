@@ -17,6 +17,7 @@
 
         <script type="text/javascript" src="https://code.angularjs.org/1.5.8/angular-route.min.js"></script>
         <script type="text/javascript" src="js/app.routes.js"></script>
+        <script type="text/javascript" src="js/controllers/mainCtrl.js"></script>
         <script type="text/javascript" src="js/controllers/loginCtrl.js"></script>
         <script type="text/javascript" src="js/controllers/pokemonCtrl.js"></script>
         <script type="text/javascript" src="js/controllers/userCtrl.js"></script>
@@ -31,6 +32,18 @@
 
         <div class="p+">
             <div class="card">
+              <div ng-controller ="mainCtrl as main">
+                <header ng-if="main.loggedIn()">
+                    <nav>
+                        <a href="/users">
+                            <lx-button lx-color="orange" lx-type="flat" ng-click="main.goTo('/users')">Users</lx-button>
+                        </a>
+                        <a href="/pokemons">
+                            <lx-button lx-color="orange" lx-type="flat" ng-click="main.goTo('/pokemons')">Pokemons</lx-button>
+                        </a>
+                    </nav>
+                </header>
+              </div>
                 <div class="p+">
                     <div ng-view></div>
 
