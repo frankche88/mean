@@ -12,8 +12,9 @@ angular.module('pokeApp.authServices', [])
             })
         };
 
-        this.logout = function() {
+        this.logOut = function() {
             AuthToken.setToken();
+            
         };
 
         this.isLoggedIn = function() {

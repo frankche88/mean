@@ -6,6 +6,11 @@ angular.module('pokeApp.mainCtrl', [])
             return authService.isLoggedIn();
         }
 
+        vm.logOut = function() {
+           authService.logOut();
+
+           $location.path('/login');
+        }
         vm.goTo = function(route){
           $location.path(route);
         }
